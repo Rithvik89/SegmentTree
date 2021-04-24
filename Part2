@@ -52,12 +52,4 @@ struct segtree
   {
     return mini_(l,r,0ll,size-1,0);
   }
-  void display()
-  {
-    for(ll i=0;i<2*size;i++)
-    {
-      cout<<v[i]<<" ";
-    }
-    cout<<endl;
-  }
 };
