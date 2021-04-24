@@ -1,0 +1,63 @@
+struct segtree
+{
+  ll size;
+  vector<ll>v;
+  void init(ll n)
+  {
+    size=1;
+    while(size<n){size*=2;}
+    v.assign(2*size,INT_MAX);
+  }
+  void set(ll i,ll x,ll node,ll lx,ll rx)
+  {
+    if(lx==rx)
+    {
+      v[node]=x;
+    }
+    else
+    {
+      ll m=(lx+rx)/2;
+      if(i<=m)
+      {
+        set(i,x,2*node+1,lx,m);
+      }
+      else
+      {
+        set(i,x,2*node+2,m+1,rx);
+      }
+      v[node]=min(v[2*node+1],v[2*node+2]);
+    }
+  }
+  void set(ll i,ll x)
+  {
+    set(i,x,0ll,0ll,size-1);
+  }
+  ll mini_(ll l,ll r,ll lx,ll rx,ll node)
+  {
+    if(r<lx||l>rx)
+    {
+      return INT_MAX;
+    }
+    else if(lx>=l&&rx<=r)
+    {
+      return v[node];
+    }
+    else 
+    {
+      ll m=(lx+rx)/2;
+      return min(mini_(l,r,lx,m,2*node+1),mini_(l,r,m+1,rx,2*node+2));
+    }
+  }
+  ll mini_(ll l,ll r)
+  {
+    return mini_(l,r,0ll,size-1,0);
+  }
+  void display()
+  {
+    for(ll i=0;i<2*size;i++)
+    {
+      cout<<v[i]<<" ";
+    }
+    cout<<endl;
+  }
+};
