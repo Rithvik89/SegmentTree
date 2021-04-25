@@ -1,0 +1,58 @@
+struct segtree
+{
+  ll size;
+  vector<ll>v;
+  void init(ll n)
+  {
+    size=1;
+    while(size<n){size*=2;}
+    v.assign(2*size,0ll);
+  }
+  void set(ll i,ll x,ll node,ll lx,ll rx)
+  {
+    if(lx==rx)
+    {
+      v[node]=x;
+    }
+    else
+    {
+      ll m=(lx+rx)/2,temp=0;
+      if(i<=m)
+      {
+        set(i,x,2*node+1,lx,m);
+      }
+      else
+      {
+        set(i,x,2*node+2,m+1,rx);
+      }
+      v[node]=v[2*node+1]+v[2*node+2];
+    }
+  }
+  void set(ll i,ll x)
+  {
+    set(i,x,0ll,0ll,size-1);
+  }
+  ll find_kth(ll node,ll k,ll lx,ll rx,ll till_now)
+  {
+    if(lx==rx)
+    {
+      return lx;
+    }
+    else
+    {
+      ll m=(lx+rx)/2;
+      if(till_now+v[2*node+1]>=k)
+      {
+        return find_kth(2*node+1,k,lx,m,till_now);
+      }
+      else
+      {
+        return find_kth(2*node+2,k,m+1,rx,till_now+v[2*node+1]);
+      }
+    }
+  }
+  ll find_kth(ll k)
+  {
+    return find_kth(0ll,k,0ll,size-1,0);
+  }
+};
