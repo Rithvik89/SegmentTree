@@ -1,0 +1,42 @@
+struct segtree
+{
+  ll size;
+  vector<pair<pair<ll,ll>,pair<ll,ll>>>v;
+  void init(ll n)
+  {
+    size=1;
+    while(size<n){size*=2;}
+    v.assign(2*size,mp(mp(0ll,0ll),mp(0ll,0ll)));
+  }
+  void set(ll i,ll x,ll node,ll lx,ll rx)
+  {
+    if(lx==rx)
+    {
+      v[node].F.F=x;v[node].F.S=x;v[node].S.F=x;v[node].S.S=x;
+    }
+    else
+    {
+      ll m=(lx+rx)/2,temp=0;
+      if(i<=m)
+      {
+        set(i,x,2*node+1,lx,m);
+      }
+      else
+      {
+        set(i,x,2*node+2,m+1,rx);
+      }
+      v[node].F.F=v[2*node+1].F.F+v[2*node+2].F.F;
+      v[node].F.S=max(v[2*node+1].S.S+v[2*node+2].S.F,max(v[2*node+1].F.S,v[2*node+2].F.S));
+      v[node].S.F=max(v[2*node+1].S.F,v[2*node+2].S.F+v[2*node+1].F.F);
+      v[node].S.S=max(v[2*node+2].S.S,v[2*node+2].F.F+v[2*node+1].S.S);
+    }
+  }
+  void set(ll i,ll x)
+  {
+    set(i,x,0ll,0ll,size-1);
+  }
+  ll max_seg()
+  {
+    return max(0ll,v[0].F.S);
+  }
+};
