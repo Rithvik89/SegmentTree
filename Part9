@@ -1,0 +1,73 @@
+struct segtree
+{
+  ll size;
+  vector<ll>v;
+  void init(ll n)
+  {
+    size=1;
+    while(size<n){size*=2;}
+    v.assign(2*size,0ll);
+  }
+  void set(ll x,ll node,ll l,ll r,ll flag)
+  {
+    if(l==r)
+    {
+      if(flag==1)
+      {
+         v[node]=1;
+      }
+      else
+      {
+        v[node]=0;
+      }
+    }
+    else
+    {
+      ll m=(l+r)/2;
+      if(x<=m)
+      {
+        set(x,2*node+1,l,m,flag);
+      }
+      else
+      {
+        set(x,2*node+2,m+1,r,flag);
+      }
+      v[node]=v[2*node+1]+v[2*node+2];
+    }
+  }
+  void set(ll x,ll flag)
+  {
+    set(x,0ll,0ll,size-1,flag);
+  }
+  ll inversion(ll l,ll r,ll x,ll till_now,ll node)
+  {
+    if(l==r)
+    {
+      return l;
+    }
+    else
+    {
+      ll m=(l+r)/2;
+      if(v[2*node+1]+till_now>=x)
+      {
+        return inversion(l,m,x,till_now,2*node+1);
+      }
+      else
+      {
+        return inversion(m+1,r,x,till_now+v[2*node+1],2*node+2);
+      }
+    }
+  }
+  ll inversion(ll x)
+  {
+      return inversion(0ll,size-1,x,0ll,0ll);
+  }
+  void display()
+  {
+    for(ll i=0;i<2*size-1;i++)
+    {
+      cout<<v[i]<<" ";
+    }
+    cout<<endl;
+  }
+};
