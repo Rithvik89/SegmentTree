@@ -1,0 +1,57 @@
+struct segtree
+{
+  ll size;
+  vector<ll>v;
+  void init(ll n)
+  {
+    size=1;
+    while(size<n){size*=2;}
+    v.assign(2*size,0ll);
+  }
+  ll modify(ll l,ll r,ll lx,ll rx,ll node,ll k)
+  {
+    if(rx<l||lx>r)
+    {
+      return 0;
+    }
+    else if(l>=lx&&r<=rx)
+    {
+      v[node]+=k;
+      return 0;
+    }
+    else
+    {
+      ll m=(l+r)/2;
+      modify(l,m,lx,rx,2*node+1,k);
+      modify(m+1,r,lx,rx,2*node+2,k);
+      return 0;
+    }
+  }
+  ll modify(ll l,ll r,ll k)
+  {
+      return modify(0ll,size-1,l,r,0ll,k);
+  }
+  ll sum(ll x,ll l,ll r,ll node)
+  {
+    if(l==r)
+    {
+      return v[node];
+    }
+    else
+    {
+      ll m=(l+r)/2;
+      if(x<=m)
+      {
+        return v[node]+sum(x,l,m,2*node+1);
+      }
+      else
+      {
+        return v[node]+sum(x,m+1,r,2*node+2);
+      }
+    }
+  }
+  ll sum(ll x)
+  {
+    return sum(x,0ll,size-1,0ll);
+  }
+};
